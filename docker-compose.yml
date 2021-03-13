@@ -1,0 +1,29 @@
+version: '3'
+services: 
+  db: 
+    image: postgres:12
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - db_data:/var/lib/postgresql
+  web:
+    build: 
+      args:
+        BUNDLER_VERSION: "2.2.14"
+      context: .
+    environment:
+      - DATABASE_HOST=db
+      - DATABASE_USER=postgres
+      - DATABASE_PASSWORD=postgres
+    ports: 
+      - "9292:9292"
+    depends_on: 
+      - db
+    restart: "always"
+    volumes:
+      - .:/app
+volumes:
+  db_data:
